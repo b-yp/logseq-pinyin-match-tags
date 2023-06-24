@@ -41,6 +41,7 @@ function App() {
       top: `${rect.top + top + 25}px`,
     });
 
+    // @ts-ignore next-line
     textFieldRef.current.focus();
 
     // 按 ESC 键关闭弹窗
@@ -88,7 +89,7 @@ function App() {
     });
   }, []);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     const field = e.target.value;
     if (!field || !pinyinEngine) {
       setMatchTags([]);
@@ -107,7 +108,7 @@ function App() {
     logseq.Editor.updateBlock(currentBlock.uuid, `${blockContent} #${tag}`);
   };
 
-  const handleInputKeyDown = (e) => {
+  const handleInputKeyDown = (e: any) => {
     if (e.key === "Enter") {
       handleClickTagList(selectedIndex);
     }
