@@ -1,3 +1,12 @@
+# [1.1.0](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.0.0...v1.1.0) (2023-06-24)
+
+
+### Features
+
+* 加个防抖,优化一下性能 ([d33f6d2](https://github.com/b-yp/logseq-pinyin-match-tags/commit/d33f6d25a622eb99442875036bb42eceb98f9f19))
+* 更新 logo ([33a8715](https://github.com/b-yp/logseq-pinyin-match-tags/commit/33a871514147e3c89bf3710c1f547bc755470e15))
+* 更新 README & 录制 demo ([b809329](https://github.com/b-yp/logseq-pinyin-match-tags/commit/b809329017010d8a6d503bde54a7803bec866713))
+
 # 1.0.0 (2023-06-24)
 
 
