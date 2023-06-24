@@ -1,8 +1,6 @@
 import { LSPluginUserEvents } from "@logseq/libs/dist/LSPlugin.user";
 import React from "react";
 
-import { QueryResultBlockEntity } from "./logseqQueryResultTypes";
-
 let _visible = logseq.isMainUIVisible;
 
 function subscribeLogseqEvent<T extends LSPluginUserEvents>(
