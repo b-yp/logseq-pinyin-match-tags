@@ -11,14 +11,11 @@
   width: 500px;
   border-radius: 8px;
   overflow: hidden;
-  background-color: yellowgreen;
-  opacity: 0.9;
+  background-color: rgba(34, 37, 41, 1);
   position: fixed;
+  bottom: auto;
+  right: auto;
   padding: 12px;
-}
-
-.tags-picker .input-container .text-field {
-  width: 100%;
 }
 
 .tags-picker .list-container {
