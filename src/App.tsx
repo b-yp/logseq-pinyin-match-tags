@@ -7,6 +7,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Modal from "@mui/material/Modal";
 import PinyinEngine from "pinyin-engine";
 import { BlockEntity } from "@logseq/libs/dist/LSPlugin";
+import throttle from "lodash/throttle";
 
 import { useAppVisible, getTags } from "./utils";
 
@@ -89,7 +90,7 @@ function App() {
     });
   }, []);
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = throttle((e: any) => {
     const field = e.target.value;
     if (!field || !pinyinEngine) {
       setMatchTags([]);
@@ -99,7 +100,7 @@ function App() {
 
     setMatchTags(matchTags);
     setSelectedIndex(0);
-  };
+  }, 500);
 
   const handleClickTagList = async (index: number) => {
     const tag = matchTags[index];
