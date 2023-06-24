@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.logseq-pinyin-tags-picker-main {
+  width: 100wh;
+  height: 100vh;
+}
+
+.tags-picker {
+  width: 500px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: yellowgreen;
+  opacity: 0.9;
+  position: fixed;
+  padding: 12px;
+}
+
+.tags-picker .input-container .text-field {
+  width: 100%;
+}
+
+.tags-picker .list-container {
+  max-height: 300px;
+  overflow: auto;
+}
