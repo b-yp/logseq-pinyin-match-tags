@@ -1,4 +1,4 @@
-import { LSPluginUserEvents } from "@logseq/libs/dist/LSPlugin.user";
+import { BlockEntity, LSPluginUserEvents } from "@logseq/libs/dist/LSPlugin.user";
 import React from "react";
 
 let _visible = logseq.isMainUIVisible;
@@ -24,7 +24,7 @@ export const useAppVisible = () => {
 };
 
 export const getTags = async () => {
-  const tags: [string, string, QueryResultBlockEntity][] = await logseq.DB.datascriptQuery(`
+  const tags: [string, string, BlockEntity][] = await logseq.DB.datascriptQuery(`
     [:find ?content ?tag (pull ?b [*])
       :where
       [?b :block/refs ?page-ref]
