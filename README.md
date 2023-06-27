@@ -7,5 +7,8 @@
 - ## 演示
   - ![demo](./assets/logseq-pinyin-match-tags.gif)
 
+- ## 鸣谢
+  - 拼音匹配引擎使用了这个库: https://github.com/aui/pinyin-engine @[aui](https://github.com/aui)
+
 - ## 许可证
   - [MIT](https://choosealicense.com/licenses/mit/)
