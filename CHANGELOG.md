@@ -1,3 +1,11 @@
+# [1.2.0](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.1.0...v1.2.0) (2023-06-27)
+
+
+### Features
+
+* README 添加鸣谢 ([a6cb183](https://github.com/b-yp/logseq-pinyin-match-tags/commit/a6cb183ecb67e9f426015f95a902a4907d80f9b5))
+* 一波优化 ([ba97d33](https://github.com/b-yp/logseq-pinyin-match-tags/commit/ba97d335a118a97610db809db176587854db6f87))
+
 # [1.1.0](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.0.0...v1.1.0) (2023-06-24)
 
 
