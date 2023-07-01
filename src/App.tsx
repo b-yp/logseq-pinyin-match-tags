@@ -66,7 +66,6 @@ function App() {
     const tagsByBlock = content
       .match(/(#[^\s#]+)/gi)
       ?.map((i) => i.substring(1));
-    console.log("tagsbl", tagsByBlock);
     const tags = await getTags();
     // 过滤掉 block 中已经有的 tag
     const newTags = tags.filter((i) => !tagsByBlock?.includes(i));
@@ -102,16 +101,19 @@ function App() {
     // 斜杠命令触发
     logseq.Editor.registerSlashCommand("tags-picker-pinyin", init);
 
-    if (logseq.settings && logseq.settings["pinyinShortcutKey"]) {
-      // 快捷键触发
-      logseq.App.registerCommandShortcut(
-        {
-          mode: "editing",
-          binding: logseq.settings["pinyinShortcutKey"],
-        },
-        init
-      );
-    }
+    // 快捷键触发
+    const shortcutKey =
+      (logseq.settings && logseq.settings["pinyinShortcutKey"]) || "mod+t";
+    logseq.App.registerCommandShortcut(
+      {
+        mode: "editing",
+        binding: shortcutKey,
+      },
+      () => {
+        console.log('快捷键:', shortcutKey)
+        init()
+      }
+    );
   }, []);
 
   useEffect(() => {
@@ -161,6 +163,7 @@ function App() {
      */
     // logseq.Editor.insertAtEditingCursor(` #${tag}`);
     // 在这个问题没解决之前先用之前的方案
+    // TODO: 有这样一个 API 可以试试：logeq.Editor.exitEditingCursor()
     logseq.Editor.updateBlock(currentBlock.uuid, `${blockContent} #${tag}`);
     setBlockContent(`${blockContent} #${tag}`);
   };
