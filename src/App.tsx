@@ -1,13 +1,16 @@
 import React, { useRef, useEffect, useState, CSSProperties } from "react";
+import PinyinEngine from "pinyin-engine";
+import { BlockEntity } from "@logseq/libs/dist/LSPlugin";
+import throttle from "lodash/throttle";
+
 import TextField from "@mui/material/TextField";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Modal from "@mui/material/Modal";
-import PinyinEngine from "pinyin-engine";
-import { BlockEntity } from "@logseq/libs/dist/LSPlugin";
-import throttle from "lodash/throttle";
+import CircularProgress from "@mui/material/CircularProgress";
+import Button from "@mui/material/Button";
 
 import { useAppVisible, getTags } from "./utils";
 
@@ -28,6 +31,7 @@ function App() {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [blockContent, setBlockContent] = useState<string>("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const initMainUI = async () => {
     logseq.showMainUI();
@@ -61,16 +65,19 @@ function App() {
     // );
   };
 
-  const initPinyinEngine = async (currentBlock: BlockEntity) => {
+  const initPinyinEngine = async (currentBlock: BlockEntity, flag = false) => {
     const content = currentBlock.content;
     const tagsByBlock = content
       .match(/(#[^\s#]+)/gi)
       ?.map((i) => i.substring(1));
-    const tags = await getTags();
+    console.time("查询耗时: ");
+    setLoading(true);
+    const tags = await getTags(flag);
+    setLoading(false);
+    console.timeEnd("查询耗时: ");
     // 过滤掉 block 中已经有的 tag
-    const newTags = tags.filter((i) => !tagsByBlock?.includes(i));
-    const uniqueArray = [...new Set(newTags)];
-    console.log("uniar", uniqueArray);
+    const newTags = tags.filter((i: string) => !tagsByBlock?.includes(i));
+    const uniqueArray = [...new Set(newTags)] as string[];
     /**
      * 建立数据索引
      * 因为查询出来的 tag 会分 [[]] 和 # 两种形式的，而我们这里不做区分，所以你建立索引之前要去重
@@ -85,7 +92,7 @@ function App() {
     setSelectedTags([]);
   };
 
-  const init = async () => {
+  const init = async (flag = false) => {
     const currentBlock = await logseq.Editor.getCurrentBlock();
     if (!currentBlock) return;
 
@@ -94,12 +101,12 @@ function App() {
     setModalVisible(true);
 
     initMainUI();
-    initPinyinEngine(currentBlock);
+    initPinyinEngine(currentBlock, flag);
   };
 
   useEffect(() => {
     // 斜杠命令触发
-    logseq.Editor.registerSlashCommand("tags-picker-pinyin", init);
+    logseq.Editor.registerSlashCommand("tags-picker-pinyin", () => init());
 
     // 快捷键触发
     const shortcutKey =
@@ -110,8 +117,8 @@ function App() {
         binding: shortcutKey,
       },
       () => {
-        console.log('快捷键:', shortcutKey)
-        init()
+        console.log("快捷键:", shortcutKey);
+        init();
       }
     );
   }, []);
@@ -131,7 +138,11 @@ function App() {
 
   const handleInputChange = throttle((e: any) => {
     const field = e.target.value;
-    if (!field || !pinyinEngine) {
+    if (!field) {
+      setMatchTags(allTags);
+      return;
+    }
+    if (!pinyinEngine) {
       setMatchTags([]);
       return;
     }
@@ -155,7 +166,6 @@ function App() {
     });
     setMatchTags([...matchTags].filter((i) => i !== tag));
     if (!currentBlock?.uuid) return;
-    console.log("blcol", blockContent);
     /**
      * TODO 使用 insertAtEditingCursor 插入性能好不用等待，并且不需要保存块的内容
      * 但是同时将 block 变为编辑模式了，导致在插件中的键盘操作不管用了
@@ -211,6 +221,7 @@ function App() {
                 >
                   {`${matchTags.length} / ${allTags.length}`}
                 </div>
+                <Button onClick={() => init(true)}>刷新</Button>
               </ListItem>
               <TextField
                 inputRef={textFieldRef}
@@ -234,22 +245,26 @@ function App() {
               />
             </div>
             <div className="list-container">
-              {matchTags.length !== 0 && (
-                <List>
-                  {matchTags.map((item, index) => (
-                    <ListItem key={item} disablePadding>
-                      <ListItemButton
-                        selected={selectedIndex === index}
-                        onClick={() => handleClickTagList(index)}
-                      >
-                        <ListItemText
-                          primary={item}
-                          style={{ color: "#ddd" }}
-                        />
-                      </ListItemButton>
-                    </ListItem>
-                  ))}
-                </List>
+              {loading ? (
+                <CircularProgress sx={{ m: "16px auto", display: "block" }} />
+              ) : (
+                matchTags.length !== 0 && (
+                  <List>
+                    {matchTags.map((item, index) => (
+                      <ListItem key={item} disablePadding>
+                        <ListItemButton
+                          selected={selectedIndex === index}
+                          onClick={() => handleClickTagList(index)}
+                        >
+                          <ListItemText
+                            primary={item}
+                            style={{ color: "#ddd" }}
+                          />
+                        </ListItemButton>
+                      </ListItem>
+                    ))}
+                  </List>
+                )
               )}
             </div>
           </>
