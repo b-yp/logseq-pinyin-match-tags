@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.2.1...v1.3.0) (2023-07-15)
+
+
+### Features
+
+* 增加缓存, 避免标签太多查询时间过长 ([e5fadf1](https://github.com/b-yp/logseq-pinyin-match-tags/commit/e5fadf1fe4cf88f8adff47f78a307e2390326c11))
+
 ## [1.2.1](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.2.0...v1.2.1) (2023-07-01)
 
 
