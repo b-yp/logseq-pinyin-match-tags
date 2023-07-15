@@ -3,6 +3,8 @@ import React from "react";
 
 let _visible = logseq.isMainUIVisible;
 
+const localStorageKey = 'byp_pinyin_engine';
+
 function subscribeLogseqEvent<T extends LSPluginUserEvents>(
   eventName: T,
   handler: (...args: any) => void
@@ -23,7 +25,13 @@ export const useAppVisible = () => {
   return React.useSyncExternalStore(subscribeToUIVisible, () => _visible);
 };
 
-export const getTags = async () => {
+export const getTags = async (flag = false) => {
+  const localTags = JSON.parse(localStorage.getItem(localStorageKey) || '[]')
+
+  if (!flag && localTags.length) {
+    return localTags
+  }
+
   const tags: [string, string, BlockEntity][] = await logseq.DB.datascriptQuery(`
     [:find ?content ?tag (pull ?b [*])
       :where
@@ -33,5 +41,8 @@ export const getTags = async () => {
     ]
   `);
 
-  return tags.map(i => i[1])
+  const newTags = tags.map(i => i[1])
+  localStorage.setItem(localStorageKey, JSON.stringify(newTags));
+
+  return newTags
 }

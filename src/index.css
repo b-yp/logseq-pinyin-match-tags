@@ -18,7 +18,14 @@
   padding: 12px;
 }
 
+.tags-picker .header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
 .tags-picker .list-container {
+  width: 100%;
   max-height: 300px;
   overflow: auto;
 }
