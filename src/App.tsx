@@ -109,11 +109,10 @@ function App() {
     logseq.Editor.registerSlashCommand("tags-picker-pinyin", () => init());
 
     // 快捷键触发
-    const shortcutKey =
-      (logseq.settings && logseq.settings["pinyinShortcutKey"]) || "mod+t";
+    const shortcutKey = logseq.settings && logseq.settings["pinyinShortcutKey"];
+
     logseq.App.registerCommandShortcut(
       {
-        mode: "editing",
         binding: shortcutKey,
       },
       () => {
