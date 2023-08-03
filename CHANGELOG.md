@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.3.0...v1.3.1) (2023-08-03)
+
+
+### Bug Fixes
+
+* 修复快捷键失效 ([61933c7](https://github.com/b-yp/logseq-pinyin-match-tags/commit/61933c7d9619580136f100962d02ba6aba7361d2))
+
 # [1.3.0](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.2.1...v1.3.0) (2023-07-15)
 
 
