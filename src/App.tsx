@@ -120,8 +120,35 @@ function App() {
         init();
       }
     );
-  }, []);
 
+    // 应一位朋友的请求，加入这个功能
+    // 选择一段文本，按快捷键，将这段文本作为 tag 插入到当前 block 后
+    // -------------------------------------------------------
+    // 监听选中文本
+    let selectedText = "";
+    logseq.Editor.onInputSelectionEnd((e) => {
+      selectedText = e.text;
+    });
+    // 注册快捷键，
+    const insertTagShortcutKey =
+      logseq.settings && logseq.settings["insertTagShortcutKey"];
+    logseq.App.registerCommandShortcut(
+      {
+        binding: insertTagShortcutKey,
+      },
+      async () => {
+        // 将选中文本作为 tag 插入 block 后jjj
+        const currentBlock = await logseq.Editor.getCurrentBlock();
+        if (!currentBlock) return;
+        await logseq.Editor.updateBlock(
+          currentBlock.uuid,
+          `${currentBlock.content} #${selectedText}`
+        );
+        logseq.Editor.exitEditingMode();
+      }
+    );
+    // --------------------------------------------------------
+  }, []);
   useEffect(() => {
     // 当前 block 改变时要清空已选标签
     setSelectedTags([]);
