@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.3.1...v1.4.0) (2023-09-15)
+
+
+### Features
+
+* 加入快捷打标签功能 ([6a3b582](https://github.com/b-yp/logseq-pinyin-match-tags/commit/6a3b582fe6a336209aa0131428080c7e52667a5d))
+
 ## [1.3.1](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.3.0...v1.3.1) (2023-08-03)
 
 
