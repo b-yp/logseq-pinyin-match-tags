@@ -32,6 +32,7 @@ function App() {
   const [blockContent, setBlockContent] = useState<string>("");
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isAscend, setIsAscend] = useState(logseq.settings?.["sortType"]);
 
   const initMainUI = async () => {
     logseq.showMainUI();
@@ -87,7 +88,7 @@ function App() {
 
     setAllTags(uniqueArray);
     // 默认设置所有 tag 为可选项
-    setMatchTags(uniqueArray);
+    setMatchTags(handleSort(uniqueArray, isAscend));
     setPinyinEngine(pinyinEngine);
     setSelectedTags([]);
   };
@@ -149,6 +150,7 @@ function App() {
     );
     // --------------------------------------------------------
   }, []);
+
   useEffect(() => {
     // 当前 block 改变时要清空已选标签
     setSelectedTags([]);
@@ -162,10 +164,24 @@ function App() {
     // });
   }, [currentBlock?.uuid]);
 
+  useEffect(() => {
+    handleSetIsAscend();
+  }, [modalVisible]);
+
+  useEffect(() => {
+    const list = handleSort(matchTags, isAscend);
+    setMatchTags(list);
+  }, [isAscend]);
+
+  const handleSetIsAscend = () => {
+    const sortType = logseq.settings && logseq.settings["sortType"];
+    setIsAscend(sortType === "升序");
+  };
+
   const handleInputChange = throttle((e: any) => {
     const field = e.target.value;
     if (!field) {
-      setMatchTags(allTags);
+      setMatchTags(handleSort(allTags, isAscend));
       return;
     }
     if (!pinyinEngine) {
@@ -177,7 +193,7 @@ function App() {
     // set 之前过滤一下已经插入的 tag
     const newMatchTags = matchTags.filter((i) => !selectedTags.includes(i));
 
-    setMatchTags(newMatchTags);
+    setMatchTags(handleSort(newMatchTags, isAscend));
     setSelectedIndex(0);
   }, 500);
 
@@ -211,9 +227,17 @@ function App() {
   };
 
   const handleCloseModal = () => {
+    handleSetIsAscend();
     logseq.hideMainUI({ restoreEditingCursor: true });
     setMatchTags([]);
     setModalVisible(false);
+  };
+
+  const handleSort = (list: string[], flag: boolean): string[] => {
+    const newList = [...list].sort((a, b) =>
+      flag ? a.length - b.length : b.length - a.length
+    );
+    return newList;
   };
 
   if (visible) {
@@ -222,6 +246,7 @@ function App() {
         className="logseq-pinyin-tags-picker-main"
         onClick={(e) => {
           if (!innerRef.current?.contains(e.target as any)) {
+            handleSetIsAscend();
             logseq.hideMainUI();
           }
         }}
@@ -236,8 +261,17 @@ function App() {
           onClose={handleCloseModal}
         >
           <>
-            <div className="input-container">
-              <ListItem>
+            <div className="search-container">
+              <ListItem
+                secondaryAction={
+                  <>
+                    <Button onClick={() => init(true)}>刷新</Button>
+                    <Button onClick={() => setIsAscend(!isAscend)}>
+                      {isAscend ? "升序" : "降序"}
+                    </Button>
+                  </>
+                }
+              >
                 <div
                   style={{
                     width: "100%",
@@ -247,7 +281,6 @@ function App() {
                 >
                   {`${matchTags.length} / ${allTags.length}`}
                 </div>
-                <Button onClick={() => init(true)}>刷新</Button>
               </ListItem>
               <TextField
                 inputRef={textFieldRef}
