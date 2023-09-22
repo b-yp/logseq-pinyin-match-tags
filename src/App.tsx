@@ -14,6 +14,23 @@ import Button from "@mui/material/Button";
 
 import { useAppVisible, getTags } from "./utils";
 
+const mainContentContainerId = "#main-content-container";
+const contentContainer = top?.document.querySelector(mainContentContainerId);
+
+let containerWidth = 0;
+let containerHeight = 0;
+containerWidth = contentContainer?.clientWidth || 0;
+containerHeight = contentContainer?.clientHeight || 0;
+
+const observer = new ResizeObserver(() => {
+  containerWidth = contentContainer?.clientWidth || 0;
+  containerHeight = contentContainer?.clientHeight || 0;
+});
+
+if (contentContainer) {
+  observer.observe(contentContainer);
+}
+
 function App() {
   const innerRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef(null);
@@ -42,10 +59,16 @@ function App() {
     if (left === undefined || top === undefined || !rect) {
       return;
     }
+
+    const _left = rect.left + left;
+    const _top = rect.top + top + 25; // 25 为一行 block 的高度，姑且算 25
+    const currentLeft = _left + 500 <= containerWidth ? _left : _left - 500; // 500 为弹窗宽
+    const currentTop = _top + 420 <= containerHeight ? _top : _top - 25 - 420; // 420 为弹窗高
+
     setModalStyle({
       ...modalStyle,
-      left: `${rect.left + left}px`,
-      top: `${rect.top + top + 25}px`,
+      left: `${currentLeft}px`,
+      top: `${currentTop}px`,
     });
 
     // @ts-ignore next-line
