@@ -1,3 +1,11 @@
+# [1.5.0](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.4.0...v1.5.0) (2023-09-22)
+
+
+### Features
+
+* 增加排序功能 ([02ff316](https://github.com/b-yp/logseq-pinyin-match-tags/commit/02ff3162f6c3d5b1e27fd3fea2b41c745d3efe1a))
+* 当弹窗在边缘不足以显示完全时自动调整位置 ([1325837](https://github.com/b-yp/logseq-pinyin-match-tags/commit/1325837bbb0658fd1e97285700a118d5d92314dd))
+
 # [1.4.0](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.3.1...v1.4.0) (2023-09-15)
 
 
