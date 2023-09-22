@@ -14,6 +14,23 @@ import Button from "@mui/material/Button";
 
 import { useAppVisible, getTags } from "./utils";
 
+const mainContentContainerId = "#main-content-container";
+const contentContainer = top?.document.querySelector(mainContentContainerId);
+
+let containerWidth = 0;
+let containerHeight = 0;
+containerWidth = contentContainer?.clientWidth || 0;
+containerHeight = contentContainer?.clientHeight || 0;
+
+const observer = new ResizeObserver(() => {
+  containerWidth = contentContainer?.clientWidth || 0;
+  containerHeight = contentContainer?.clientHeight || 0;
+});
+
+if (contentContainer) {
+  observer.observe(contentContainer);
+}
+
 function App() {
   const innerRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef(null);
@@ -32,6 +49,7 @@ function App() {
   const [blockContent, setBlockContent] = useState<string>("");
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isAscend, setIsAscend] = useState(logseq.settings?.["sortType"]);
 
   const initMainUI = async () => {
     logseq.showMainUI();
@@ -41,10 +59,16 @@ function App() {
     if (left === undefined || top === undefined || !rect) {
       return;
     }
+
+    const _left = rect.left + left;
+    const _top = rect.top + top + 25; // 25 为一行 block 的高度，姑且算 25
+    const currentLeft = _left + 500 <= containerWidth ? _left : _left - 500; // 500 为弹窗宽
+    const currentTop = _top + 420 <= containerHeight ? _top : _top - 25 - 420; // 420 为弹窗高
+
     setModalStyle({
       ...modalStyle,
-      left: `${rect.left + left}px`,
-      top: `${rect.top + top + 25}px`,
+      left: `${currentLeft}px`,
+      top: `${currentTop}px`,
     });
 
     // @ts-ignore next-line
@@ -87,7 +111,7 @@ function App() {
 
     setAllTags(uniqueArray);
     // 默认设置所有 tag 为可选项
-    setMatchTags(uniqueArray);
+    setMatchTags(handleSort(uniqueArray, isAscend));
     setPinyinEngine(pinyinEngine);
     setSelectedTags([]);
   };
@@ -149,6 +173,7 @@ function App() {
     );
     // --------------------------------------------------------
   }, []);
+
   useEffect(() => {
     // 当前 block 改变时要清空已选标签
     setSelectedTags([]);
@@ -162,10 +187,24 @@ function App() {
     // });
   }, [currentBlock?.uuid]);
 
+  useEffect(() => {
+    handleSetIsAscend();
+  }, [modalVisible]);
+
+  useEffect(() => {
+    const list = handleSort(matchTags, isAscend);
+    setMatchTags(list);
+  }, [isAscend]);
+
+  const handleSetIsAscend = () => {
+    const sortType = logseq.settings && logseq.settings["sortType"];
+    setIsAscend(sortType === "升序");
+  };
+
   const handleInputChange = throttle((e: any) => {
     const field = e.target.value;
     if (!field) {
-      setMatchTags(allTags);
+      setMatchTags(handleSort(allTags, isAscend));
       return;
     }
     if (!pinyinEngine) {
@@ -177,7 +216,7 @@ function App() {
     // set 之前过滤一下已经插入的 tag
     const newMatchTags = matchTags.filter((i) => !selectedTags.includes(i));
 
-    setMatchTags(newMatchTags);
+    setMatchTags(handleSort(newMatchTags, isAscend));
     setSelectedIndex(0);
   }, 500);
 
@@ -211,9 +250,17 @@ function App() {
   };
 
   const handleCloseModal = () => {
+    handleSetIsAscend();
     logseq.hideMainUI({ restoreEditingCursor: true });
     setMatchTags([]);
     setModalVisible(false);
+  };
+
+  const handleSort = (list: string[], flag: boolean): string[] => {
+    const newList = [...list].sort((a, b) =>
+      flag ? a.length - b.length : b.length - a.length
+    );
+    return newList;
   };
 
   if (visible) {
@@ -222,6 +269,7 @@ function App() {
         className="logseq-pinyin-tags-picker-main"
         onClick={(e) => {
           if (!innerRef.current?.contains(e.target as any)) {
+            handleSetIsAscend();
             logseq.hideMainUI();
           }
         }}
@@ -236,8 +284,17 @@ function App() {
           onClose={handleCloseModal}
         >
           <>
-            <div className="input-container">
-              <ListItem>
+            <div className="search-container">
+              <ListItem
+                secondaryAction={
+                  <>
+                    <Button onClick={() => init(true)}>刷新</Button>
+                    <Button onClick={() => setIsAscend(!isAscend)}>
+                      {isAscend ? "升序" : "降序"}
+                    </Button>
+                  </>
+                }
+              >
                 <div
                   style={{
                     width: "100%",
@@ -247,7 +304,6 @@ function App() {
                 >
                   {`${matchTags.length} / ${allTags.length}`}
                 </div>
-                <Button onClick={() => init(true)}>刷新</Button>
               </ListItem>
               <TextField
                 inputRef={textFieldRef}
