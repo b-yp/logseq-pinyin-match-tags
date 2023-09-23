@@ -14,7 +14,7 @@ import Button from "@mui/material/Button";
 
 import { useAppVisible, getTags } from "./utils";
 
-const mainContentContainerId = "#main-content-container";
+const mainContentContainerId = "#app-container";
 const contentContainer = top?.document.querySelector(mainContentContainerId);
 
 let containerWidth = 0;
@@ -67,8 +67,8 @@ function App() {
 
     setModalStyle({
       ...modalStyle,
-      left: `${currentLeft}px`,
-      top: `${currentTop}px`,
+      left: `${currentLeft < 0 ? 0 : currentLeft}px`,
+      top: `${currentTop < 0 ? 0 : currentTop}px`,
     });
 
     // @ts-ignore next-line
