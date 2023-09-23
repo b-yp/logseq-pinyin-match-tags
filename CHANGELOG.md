@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.5.0...v1.5.1) (2023-09-23)
+
+
+### Bug Fixes
+
+* 修复弹窗仍然被遮挡的问题 ([7962e80](https://github.com/b-yp/logseq-pinyin-match-tags/commit/7962e80b17c6834c743eead8c1a7b6eb7d3b07e4))
+
 # [1.5.0](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.4.0...v1.5.0) (2023-09-22)
 
 
