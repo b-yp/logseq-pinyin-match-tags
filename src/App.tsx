@@ -68,7 +68,7 @@ function App() {
     setModalStyle({
       ...modalStyle,
       left: `${currentLeft < 0 ? 0 : currentLeft}px`,
-      top: `${currentTop < 0 ? 0 : currentTop}px`,
+      top: `${currentTop < 48 ? 48 : currentTop}px`, // 48 为 Logseq 顶栏的高度，所以设置最小高度 48 避免弹窗按钮被遮挡
     });
 
     // @ts-ignore next-line
@@ -161,7 +161,7 @@ function App() {
         binding: insertTagShortcutKey,
       },
       async () => {
-        // 将选中文本作为 tag 插入 block 后jjj
+        // 将选中文本作为 tag 插入 block 后
         const currentBlock = await logseq.Editor.getCurrentBlock();
         if (!currentBlock) return;
         await logseq.Editor.updateBlock(
