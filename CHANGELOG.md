@@ -1,3 +1,15 @@
+# [1.6.0](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.5.2...v1.6.0) (2023-10-18)
+
+
+### Bug Fixes
+
+* 修复打包失败 ([9c08033](https://github.com/b-yp/logseq-pinyin-match-tags/commit/9c08033c9b816507962d468b2b2b6f381dcc67a9))
+
+
+### Features
+
+* 支持多关键词查询 ([a256eb3](https://github.com/b-yp/logseq-pinyin-match-tags/commit/a256eb3ac55d726290b1057a5b5f1afcbb024677))
+
 ## [1.5.2](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.5.1...v1.5.2) (2023-10-17)
 
 
