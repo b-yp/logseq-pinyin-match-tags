@@ -207,14 +207,22 @@ function App() {
       setMatchTags(handleSort(allTags, isAscend));
       return;
     }
+
     if (!pinyinEngine) {
       setMatchTags([]);
       return;
     }
-    const matchTags = pinyinEngine.query(field);
+
+    let newPinyinEngine = pinyinEngine;
+    let matchTags;
+
+    field.split(" ").forEach((i) => {
+      matchTags = newPinyinEngine.query(i);
+      newPinyinEngine = new PinyinEngine(matchTags);
+    });
 
     // set 之前过滤一下已经插入的 tag
-    const newMatchTags = matchTags.filter((i) => !selectedTags.includes(i));
+    const newMatchTags = matchTags!.filter((i) => !selectedTags.includes(i));
 
     setMatchTags(handleSort(newMatchTags, isAscend));
     setSelectedIndex(0);
