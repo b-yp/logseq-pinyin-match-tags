@@ -214,15 +214,15 @@ function App() {
     }
 
     let newPinyinEngine = pinyinEngine;
-    let matchTags;
+    let matchTags: string[] = [];
 
-    field.split(" ").forEach((i) => {
+    field.split(" ").forEach((i: string) => {
       matchTags = newPinyinEngine.query(i);
       newPinyinEngine = new PinyinEngine(matchTags);
     });
 
     // set 之前过滤一下已经插入的 tag
-    const newMatchTags = matchTags!.filter((i) => !selectedTags.includes(i));
+    const newMatchTags = matchTags!.filter((i: string) => !selectedTags.includes(i));
 
     setMatchTags(handleSort(newMatchTags, isAscend));
     setSelectedIndex(0);
