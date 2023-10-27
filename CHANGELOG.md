@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.6.0...v1.6.1) (2023-10-27)
+
+
+### Bug Fixes
+
+* 修复 block 有属性时 tags 会添加到 block 的属性上 ([4f6daac](https://github.com/b-yp/logseq-pinyin-match-tags/commit/4f6daacc38a3f5204b97f1ab07340f68a509b8b3))
+
 # [1.6.0](https://github.com/b-yp/logseq-pinyin-match-tags/compare/v1.5.2...v1.6.0) (2023-10-18)
 
 
