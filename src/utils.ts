@@ -46,3 +46,8 @@ export const getTags = async (flag = false) => {
 
   return newTags
 }
+
+export const isLogseqAttribute = (s: string): boolean => {
+  const pattern = /^[^:]+:: .+$/;
+  return pattern.test(s);
+}

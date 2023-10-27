@@ -12,7 +12,7 @@ import Modal from "@mui/material/Modal";
 import CircularProgress from "@mui/material/CircularProgress";
 import Button from "@mui/material/Button";
 
-import { useAppVisible, getTags } from "./utils";
+import { useAppVisible, getTags, isLogseqAttribute } from "./utils";
 
 const mainContentContainerId = "#app-container";
 const contentContainer = top?.document.querySelector(mainContentContainerId);
@@ -222,7 +222,9 @@ function App() {
     });
 
     // set 之前过滤一下已经插入的 tag
-    const newMatchTags = matchTags!.filter((i: string) => !selectedTags.includes(i));
+    const newMatchTags = matchTags!.filter(
+      (i: string) => !selectedTags.includes(i)
+    );
 
     setMatchTags(handleSort(newMatchTags, isAscend));
     setSelectedIndex(0);
@@ -239,6 +241,18 @@ function App() {
     });
     setMatchTags([...matchTags].filter((i) => i !== tag));
     if (!currentBlock?.uuid) return;
+
+    const blockList = blockContent.split("\n");
+
+    for (let i = blockList.length - 1; i >= 0; i--) {
+      if (!isLogseqAttribute(blockList[i])) {
+        blockList[i] = `${blockList[i]} #${tag}`;
+        break;
+      }
+    }
+    
+    const newBlock = blockList.join("\n");
+
     /**
      * TODO 使用 insertAtEditingCursor 插入性能好不用等待，并且不需要保存块的内容
      * 但是同时将 block 变为编辑模式了，导致在插件中的键盘操作不管用了
@@ -247,8 +261,8 @@ function App() {
     // logseq.Editor.insertAtEditingCursor(` #${tag}`);
     // 在这个问题没解决之前先用之前的方案
     // TODO: 有这样一个 API 可以试试：logeq.Editor.exitEditingCursor()
-    logseq.Editor.updateBlock(currentBlock.uuid, `${blockContent} #${tag}`);
-    setBlockContent(`${blockContent} #${tag}`);
+    logseq.Editor.updateBlock(currentBlock.uuid, newBlock);
+    setBlockContent(newBlock);
   };
 
   const handleInputKeyDown = (e: any) => {
